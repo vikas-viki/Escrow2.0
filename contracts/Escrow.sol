@@ -108,3 +108,27 @@ contract Escrow {
         return etherAmount;
     }
 }
+
+contract EscrowFactory {
+    // List of Escroww.
+    Escrow[] public listings;
+
+    function newListing(
+        string memory _title,
+        string memory _description,
+        uint256 _amountInUsd,
+        string memory _image
+    ) public returns (address) {
+        // Create new escrow using contracts.
+        Escrow currentEscrow = new Escrow(
+            _title,
+            _description,
+            _amountInUsd,
+            _image
+        );
+        // Add new escrow to list.
+        listings.push(currentEscrow);
+        // Return user the address of escrow for further communication.
+        return address(currentEscrow);
+    }
+}
