@@ -6,40 +6,26 @@ describe('Escrow', function () {
   let depositor;
   let beneficiary;
   let arbiter;
+  let Escrows;
   const deposit = ethers.utils.parseEther('1');
-  beforeEach(async () => {
-    depositor = ethers.provider.getSigner(0);
-    beneficiary = ethers.provider.getSigner(1);
-    arbiter = ethers.provider.getSigner(2);
-    const Escrow = await ethers.getContractFactory('Escrow');
-    contract = await Escrow.deploy(
-      arbiter.getAddress(),
-      beneficiary.getAddress(),
-      {
-        value: deposit,
-      }
-    );
-    await contract.deployed();
+
+  before(async () => {
+    const Escrow = await ethers.getContractFactory("EscrowFactory");
+    [beneficiary, depositor, arbiter] = await ethers.getSigners();
+    Escrows = await Escrow.deploy();
   });
 
-  it('should be funded initially', async function () {
-    let balance = await ethers.provider.getBalance(contract.address);
-    expect(balance).to.eq(deposit);
-  });
-
-  describe('after approval from address other than the arbiter', () => {
-    it('should revert', async () => {
-      await expect(contract.connect(beneficiary).approve()).to.be.reverted;
+  describe('Deployment', ()=>{
+    it('should have 0 listings', async()=>{
+      expect(await Escrows.noOfListings()).to.equal(0);
     });
   });
-
-  describe('after approval from the arbiter', () => {
-    it('should transfer balance to beneficiary', async () => {
-      const before = await ethers.provider.getBalance(beneficiary.getAddress());
-      const approveTxn = await contract.connect(arbiter).approve();
-      await approveTxn.wait();
-      const after = await ethers.provider.getBalance(beneficiary.getAddress());
-      expect(after.sub(before)).to.eq(deposit);
-    });
-  });
+  describe('New List', ()=>{
+    it('should create new list', async()=>{
+      const list1 = await Escrows.newListing('title', 'description', 100, "IMG");
+      await list1.wait();
+      expect(await Escrows.noOfListings()).to.equal(1);
+      console.log(await Escrows.listings(0));
+    })
+  })
 });

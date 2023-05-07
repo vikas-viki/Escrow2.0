@@ -93,17 +93,16 @@ contract Escrow {
     }
 
     // get the equavalent amount of wei for dollars passed.
-    function convertUSDToEther(uint256 _usdAmount)
-        public
-        view
-        returns (uint256)
-    {
+    function convertUSDToEther(
+        uint256 _usdAmount
+    ) public view returns (uint256) {
         // Get the current ETH/USD price from Chainlink oracle.
         (, int256 price, , , ) = priceFeed.latestRoundData();
         uint256 etherPrice = uint256(price);
 
         // Calculate the equivalent amount of wei for the given USD amount.
-        uint256 etherAmount = ((_usdAmount * (10**8)) * 10**18) / etherPrice;
+        uint256 etherAmount = ((_usdAmount * (10 ** 8)) * 10 ** 18) /
+            etherPrice;
 
         return etherAmount;
     }
@@ -112,6 +111,7 @@ contract Escrow {
 contract EscrowFactory {
     // List of Escroww.
     Escrow[] public listings;
+    uint256 public noOfListings;
 
     function newListing(
         string memory _title,
@@ -128,6 +128,8 @@ contract EscrowFactory {
         );
         // Add new escrow to list.
         listings.push(currentEscrow);
+        // Increment the number of lisitngs.
+        noOfListings++;
         // Return user the address of escrow for further communication.
         return address(currentEscrow);
     }
