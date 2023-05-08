@@ -1,8 +1,9 @@
 const { ethers } = require('hardhat');
 const { expect } = require('chai');
 
+
+/* Idle case condition test.
 describe('Escrow', function () {
-  let contract;
   let depositor;
   let beneficiary;
   let arbiter;
@@ -66,8 +67,62 @@ describe('Escrow', function () {
       const sellerBalanceAfter = await ethers.provider.getBalance(beneficiary.address);
       expect(sellerBalanceAfter).to.greaterThan(sellerBalanceBefore);
     });
+  });
 
+});
+*/
 
+// Check what happens if the buyer sends less amount.
+describe('Escrow', function () {
+  let depositor;
+  let beneficiary;
+  let arbiter;
+  let Escrows;
+  let Escrow;
+  before(async () => {
+    const Escrow_s = await ethers.getContractFactory("EscrowFactory");
+    Escrow = await ethers.getContractFactory('Escrow');
+    [beneficiary, depositor, arbiter] = await ethers.getSigners();
+    Escrows = await Escrow_s.deploy();
+  });
+
+  describe('Deployment', () => {
+    it('should have 0 listings', async () => {
+      expect(await Escrows.noOfListings()).to.equal(0);
+    });
+  });
+
+  describe('New List', () => {
+    it('should create new list', async () => {
+      const list1 = await Escrows.connect(beneficiary).newListing('title_1', 'description_1', 10, "IMG_1");
+      await list1.wait();
+      expect(await Escrows.noOfListings()).to.equal(1);
+    });
+
+    it('Assigns the escrow details correctly', async () => {
+      const escrowContract = new ethers.Contract(Escrows.listings(0), Escrow.interface, beneficiary);
+      // Retrieve the title and description of the new listing.
+      const title = await escrowContract.title();
+      const description = await escrowContract.description();
+      const image = await escrowContract.image();
+      const amount = await escrowContract.amountInUsd();
+      const creator = await escrowContract.beneficiary();
+
+      expect(title).to.equal('title_1');
+      expect(description).to.equal('description_1');
+      expect(image).to.equal('IMG_1');
+      expect(amount).to.equal(10);
+      expect(creator).to.equal(beneficiary.address);
+
+    });
+    it('fails to buy the product when buyer sends less than the seller\'s listed amount', async () => {
+      const escrowContract = new ethers.Contract(Escrows.listings(0), Escrow.interface, beneficiary);
+      const weiOf9USD = await escrowContract.convertUSDToEther(Number(9));
+      await expect(
+        escrowContract.connect(depositor).buy(arbiter.address, { value: weiOf9USD })
+      ).to.be.revertedWith("Insufficient token amount provided.");
+    });
+    
   });
 
 });
