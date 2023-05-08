@@ -2,8 +2,9 @@
 pragma solidity ^0.8.1;
 
 import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
-contract Escrow {
+contract Escrow is ReentrancyGuard {
     // Seller of product.
     address public beneficiary;
     // Approvance of abiter if the sellor listed product is correct, and working correctly.
@@ -53,7 +54,7 @@ contract Escrow {
     Get the details of buyer, and arbiter by buyer, because he want to verify from his side.
     Push the details to the respective arrays.
     */
-    function buy(address _arbiter) public payable {
+    function buy(address _arbiter) public payable nonReentrant {
         require(_arbiter != address(0), "Arbiter cannot be null");
         require(bought == false, "The product already bought.");
         require(msg.sender != beneficiary, "Seller can't buy.");
@@ -72,7 +73,7 @@ contract Escrow {
     /*
     Function for approver to approve if the product is good.
     */
-    function approve(bool _good) external {
+    function approve(bool _good) external nonReentrant {
         require(bought == true, "Product not yet bought.");
         require(arbiter == msg.sender, "Only arbiter can approve.");
         uint256 balance = address(this).balance;
@@ -109,7 +110,7 @@ contract Escrow {
     }
 }
 
-contract EscrowFactory {
+contract EscrowFactory is ReentrancyGuard {
     // List of Escroww.
     Escrow[] public listings;
     uint256 public noOfListings;
@@ -127,7 +128,7 @@ contract EscrowFactory {
         string memory _description,
         uint256 _amountInUsd,
         string memory _image
-    ) public returns (address) {
+    ) public nonReentrant returns (address) {
         // Create new escrow using contracts.
         Escrow currentEscrow = new Escrow(
             _title,

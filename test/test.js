@@ -2,7 +2,8 @@ const { ethers } = require('hardhat');
 const { expect } = require('chai');
 
 
-/* Idle case condition test.
+// Idle case condition test.
+
 describe('Escrow', function () {
   let depositor;
   let beneficiary;
@@ -70,9 +71,9 @@ describe('Escrow', function () {
   });
 
 });
-*/
 
-/* Check what happens if the buyer sends less amount.
+
+// Check what happens if the buyer sends less amount.
 describe('Escrow', function () {
   let depositor;
   let beneficiary;
@@ -126,9 +127,9 @@ describe('Escrow', function () {
   });
 
 });
-*/
 
-/* Check what happens if the approver disagrees with the product.
+
+// Check what happens if the approver disagrees with the product.
 describe('Escrow', function () {
   let depositor;
   let beneficiary;
@@ -197,4 +198,3 @@ describe('Escrow', function () {
   });
 
 });
-*/
