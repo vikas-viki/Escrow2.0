@@ -35,9 +35,10 @@ contract Escrow {
         string memory _title,
         string memory _description,
         uint256 _amountInUsd,
-        string memory _image
+        string memory _image,
+        address _creator
     ) {
-        beneficiary = msg.sender;
+        beneficiary = _creator;
         title = _title;
         description = _description;
         amountInUsd = _amountInUsd;
@@ -59,7 +60,7 @@ contract Escrow {
         require(beneficiary != _arbiter, "Seller can't be a arbiter.");
         // Check if the buyer deposits enough amount of ethers to meet the sale requirenment.
         require(
-            msg.value >= convertUSDToEther(amountInUsd),
+            msg.value >= convertUSDToEther(int(amountInUsd)),
             "Insufficient token amount provided."
         );
         // Set respective buyer and seller.
@@ -94,14 +95,14 @@ contract Escrow {
 
     // get the equavalent amount of wei for dollars passed.
     function convertUSDToEther(
-        uint256 _usdAmount
+        int256 _usdAmount
     ) public view returns (uint256) {
         // Get the current ETH/USD price from Chainlink oracle.
         (, int256 price, , , ) = priceFeed.latestRoundData();
         uint256 etherPrice = uint256(price);
 
         // Calculate the equivalent amount of wei for the given USD amount.
-        uint256 etherAmount = ((_usdAmount * (10 ** 8)) * 10 ** 18) /
+        uint256 etherAmount = ((uint(_usdAmount) * (10 ** 8)) * 10 ** 18) /
             etherPrice;
 
         return etherAmount;
@@ -112,6 +113,14 @@ contract EscrowFactory {
     // List of Escroww.
     Escrow[] public listings;
     uint256 public noOfListings;
+
+    event newEscrow(
+        address creator,
+        string _title,
+        string _description,
+        uint256 _amountInUsd,
+        string _image
+    );
 
     function newListing(
         string memory _title,
@@ -124,13 +133,16 @@ contract EscrowFactory {
             _title,
             _description,
             _amountInUsd,
-            _image
+            _image,
+            msg.sender
         );
         // Add new escrow to list.
         listings.push(currentEscrow);
         // Increment the number of lisitngs.
         noOfListings++;
+
+        emit newEscrow(msg.sender, _title, _description, _amountInUsd, _image);
         // Return user the address of escrow for further communication.
-        return address(currentEscrow);
+        return address(listings[noOfListings - 1]);
     }
 }
