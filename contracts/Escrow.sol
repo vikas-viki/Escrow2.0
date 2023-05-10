@@ -146,4 +146,8 @@ contract EscrowFactory is ReentrancyGuard {
         // Return user the address of escrow for further communication.
         return address(listings[noOfListings - 1]);
     }
+
+    function getListings() public view returns( Escrow[] memory){
+        return listings;
+    }
 }

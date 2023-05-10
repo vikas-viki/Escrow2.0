@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
+import {StateContextProvider} from "./context"
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -15,7 +16,9 @@ if (!window.ethereum) {
 } else {
   root.render(
     <React.StrictMode>
-      <App />
+      <StateContextProvider>
+        <App />
+      </StateContextProvider>
     </React.StrictMode>
   );
 }
