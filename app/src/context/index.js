@@ -3,6 +3,7 @@ import { ethers } from "ethers";
 
 import EscrowFactory from '../artifacts/contracts/Escrow.sol/EscrowFactory.json';
 import Escrow from "../artifacts/contracts/Escrow.sol/Escrow.json";
+
 const StateContext = createContext();
 
 const Caddress = "0x800184678d0A0dc69FdCEc89F881ae8dABD94e91";
@@ -45,7 +46,7 @@ export const StateContextProvider = ({ children }) => {
                 window.location.reload();
             }
         } catch (error) {
-            alert(error.message);
+            console.log(error);
         }
         console.log(address, contract);
     };

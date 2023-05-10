@@ -1,22 +1,24 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useStateContext } from "./context";
+import Hero from "./pages/Hero.jsx";
+import {
+  BrowserRouter,
+  Route,
+  Routes,
+} from "react-router-dom";
+import Home from "./pages/Home";
 
 function App() {
+  const { address } = useStateContext();
 
-  const { createNewList, connect, address, getListings} = useStateContext();
-
-  async function getData(){
-    await connect();
-    await getListings();
-  }
-  useEffect(() => {
-    getData();
-  }, [address]);
 
   return (
-    <div>
-      hello
-    </div>
+    <BrowserRouter >
+      <Routes>
+        <Route exact path="/" element={<Hero />} />
+        <Route exact path="/home" element={<Home />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
