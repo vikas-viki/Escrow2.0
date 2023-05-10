@@ -3,11 +3,11 @@ import { useStateContext } from "./context";
 
 function App() {
 
-  const { createNewList, connect, address,  } = useStateContext();
+  const { createNewList, connect, address, getListings} = useStateContext();
 
   async function getData(){
     await connect();
-    await createNewList();
+    await getListings();
   }
   useEffect(() => {
     getData();
