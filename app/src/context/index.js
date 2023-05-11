@@ -10,7 +10,7 @@ const Caddress = "0x800184678d0A0dc69FdCEc89F881ae8dABD94e91";
 
 export const StateContextProvider = ({ children }) => {
     // connected user products.
-    const [address, setAddress] = useState("");
+    const [address, setAddress] = useState();
     // Factory contract.
     const [contract, setContract] = useState();
     const [listings, setListings] = useState([]);
@@ -18,7 +18,7 @@ export const StateContextProvider = ({ children }) => {
     const [userBroughtProducts, setUserBroughtProducts] = useState([]);
     const [userListedProducts, setUserListedProducts] = useState([]);
     const [arbiterProducts, setArbiterProducts] = useState([]);
-
+    const [listingDetailsWithData, setListingDetailsWithData] = useState([]);
     // To connect user to dapp.
     const connect = async () => {
         // Check if the browser has MetaMask installed
@@ -37,7 +37,7 @@ export const StateContextProvider = ({ children }) => {
             const network = await _signer.provider._detectNetwork();
             await setSigner(_signer);
             await setAddress(signer.address);
-            if (Number(network.chainId) === 11155111 && signer) {
+            if (Number(network.chainId) === 11155111 && _signer) {
 
                 const contract_factory = new ethers.Contract(Caddress, EscrowFactory.abi, signer);
                 await setContract(contract_factory);
@@ -48,7 +48,6 @@ export const StateContextProvider = ({ children }) => {
         } catch (error) {
             console.log(error);
         }
-        console.log(address, contract);
     };
 
     // Returns listings which haven't brought yet.
@@ -65,16 +64,34 @@ export const StateContextProvider = ({ children }) => {
                     }
                     return el;
                 });
-                setListings(listingarr);
-                console.log("Listings: ", listingarr);
+                await setListings(listingarr);
+                return ;
             } catch (error) {
                 console.log(error);
+                return;
             }
         }
     }
 
+    const getAllListingDetails = async () => {
+        try {
+            console.log({contract});
+            await getListings();
+            var arr = [];
+            console.log({ listings });
+            for (let i = 0; i < listings.length; i++) {
+                arr.push(await getListDetails(listings[i]));
+            }
+            await setListingDetailsWithData(arr);
+            console.log({listingDetailsWithData});
+        } catch (error) {
+            console.log(error);
+            setListingDetailsWithData([]);
+        }
+    }
+
     // To get the connected user buyings.
-    const getuserBoughtProducts = async ()=>{
+    const getuserBoughtProducts = async () => {
         if (contract) {
             try {
                 const current_listings = await contract.getListings();
@@ -96,7 +113,7 @@ export const StateContextProvider = ({ children }) => {
     }
 
     // To get the connected user listings.
-    const getuserListedProducts = async ()=>{
+    const getuserListedProducts = async () => {
         if (contract) {
             try {
                 const current_listings = await contract.getListings();
@@ -118,7 +135,7 @@ export const StateContextProvider = ({ children }) => {
     }
 
     // To get the connected arbiter products (to be approved).
-    const getArbiterProducts = async ()=>{
+    const getArbiterProducts = async () => {
         if (contract) {
             try {
                 const current_listings = await contract.getListings();
@@ -211,7 +228,9 @@ export const StateContextProvider = ({ children }) => {
                 getArbiterProducts,
                 userBroughtProducts,
                 userListedProducts,
-                arbiterProducts
+                arbiterProducts,
+                getAllListingDetails,
+                listingDetailsWithData
             }}
         >
             {children}

@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App';
+import Hero from './Hero';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import {StateContextProvider} from "./context"
+import {StateContextProvider} from "./Context"
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -17,7 +17,7 @@ if (!window.ethereum) {
   root.render(
     <React.StrictMode>
       <StateContextProvider>
-        <App />
+        <Hero />
       </StateContextProvider>
     </React.StrictMode>
   );
