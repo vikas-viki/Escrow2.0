@@ -13,7 +13,6 @@ export const StateContextProvider = ({ children }) => {
     const [address, setAddress] = useState();
     // Factory contract.
     const [contract, setContract] = useState();
-    const [listings, setListings] = useState([]);
     const [signer, setSigner] = useState({});
     const [userBroughtProducts, setUserBroughtProducts] = useState([]);
     const [userListedProducts, setUserListedProducts] = useState([]);
@@ -50,40 +49,37 @@ export const StateContextProvider = ({ children }) => {
         }
     };
 
-    // Returns listings which haven't brought yet.
-    const getListings = async () => {
+    // Returns listings which haven't been bought yet.
+    const getAllData = async () => {
         if (contract && signer.address) {
             try {
                 const current_listings = await contract.getListings();
-                var listingarr = [];
-                current_listings.map(async el => {
-                    let curr_contract = new ethers.Contract(el, Escrow.abi, signer);
+                const listingarr = [];
+                for (const el of current_listings) {
+                    const curr_contract = new ethers.Contract(el, Escrow.abi, signer);
                     const bought = await curr_contract.bought();
                     if (bought === false) {
                         listingarr.push(curr_contract);
                     }
-                    return el;
-                });
-                await setListings(listingarr);
-                return ;
+                }
+                const arr = [];
+                for (const listing of listingarr) {
+                    const data = await getListDetails(listing);
+                    arr.push(data);
+                }
+                const a = await setListingDetailsWithData(arr);
+                console.log({ listingDetailsWithData, a });
             } catch (error) {
                 console.log(error);
-                return;
             }
         }
-    }
+    };
+
+
 
     const getAllListingDetails = async () => {
         try {
-            console.log({contract});
-            await getListings();
-            var arr = [];
-            console.log({ listings });
-            for (let i = 0; i < listings.length; i++) {
-                arr.push(await getListDetails(listings[i]));
-            }
-            await setListingDetailsWithData(arr);
-            console.log({listingDetailsWithData});
+
         } catch (error) {
             console.log(error);
             setListingDetailsWithData([]);
@@ -187,7 +183,7 @@ export const StateContextProvider = ({ children }) => {
         if (_arbiter && _contract) {
             try {
                 await _contract.buy(_arbiter);
-                await getListings();
+                await getAllData();
             } catch (error) {
                 console.log(error);
             }
@@ -218,8 +214,6 @@ export const StateContextProvider = ({ children }) => {
                 connect,
                 setAddress,
                 createNewList,
-                getListings,
-                listings,
                 getListDetails,
                 approveListing,
                 buyListing,
@@ -230,7 +224,8 @@ export const StateContextProvider = ({ children }) => {
                 userListedProducts,
                 arbiterProducts,
                 getAllListingDetails,
-                listingDetailsWithData
+                listingDetailsWithData,
+                getAllData
             }}
         >
             {children}

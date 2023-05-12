@@ -3,22 +3,23 @@ import { useStateContext } from "../Context";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Navbar, Sidebar } from "../components";
 import ConnectMetamask from "../components/ConnectMetamask";
+import { DisplayCampaigns } from "../components";
 
 const Home = () => {
   const [isLoading, setIsLoading] = useState(false);
 
-  const { address, contract, listingDetailsWithData, getAllListingDetails } =
+  const { address, contract, listingDetailsWithData, getAllData, listings } =
     useStateContext();
 
-  const fetchCampaigns = async () => {
-    setIsLoading(true);
-    await getAllListingDetails();
-    setIsLoading(false);
-  };
-
   useEffect(() => {
+    const fetchCampaigns = async () => {
+      setIsLoading(true);
+      await getAllData();
+      setIsLoading(false);
+      console.log(listingDetailsWithData);
+    };
     if (contract) fetchCampaigns();
-  }, [address]);
+  }, [address, contract]);
 
   return (
     <>
@@ -32,9 +33,18 @@ const Home = () => {
           {!address ? (
             <ConnectMetamask />
           ) : (
-            <div>
-              hello
-            </div>
+            <>
+              {listingDetailsWithData.length > 0 && (
+                <>
+                  {console.log(listingDetailsWithData)}
+                  <DisplayCampaigns
+                    title="All Listings"
+                    isLoading={isLoading}
+                    listings={listingDetailsWithData}
+                  />
+                </>
+              )}
+            </>
           )}
         </div>
       </div>
@@ -43,9 +53,3 @@ const Home = () => {
 };
 
 export default Home;
-// <DisplayCampaigns
-//   title="All Listings"
-//   isLoading={isLoading}
-//   listings={listingDetailsWithData}
-// />
-// import { DisplayCampaigns } from "../components";
