@@ -17,13 +17,16 @@ const Displaylistings = ({ title, isLoading, listings }) => {
         {title} ({!isLoading && listings.length})
       </h1>
 
-      <div className="flex flex-wrap mt-[20px] gap-[26px]">
+      <div className={`flex flex-wrap mt-[20px] gap-[26px] items-center ${isLoading && 'justify-center'}`}>
         {isLoading && (
-          <img
-            src={loader}
-            alt="loader"
-            className="w-[100px] h-[100px] object-contain"
-          />
+          <div className="flex flex-col items-center justify-center">
+            <img
+              src={loader}
+              alt="loader"
+              className="w-[100px] h-[100px] object-contain"
+            />
+            <p className="font-epilogue text-[15px] text-white font-semibold leading-[1px] opacity-30">We're preparing everything for you...</p>
+          </div>
         )}
 
         {!isLoading && listings.length === 0 && (
@@ -40,7 +43,7 @@ const Displaylistings = ({ title, isLoading, listings }) => {
             <FundCard
               key={i}
               {...listing}
-              handleClick={() => handleNavigate(listing)}
+              handleClick={() => handleNavigate(i)}
             />
           ))}
       </div>

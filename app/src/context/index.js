@@ -6,9 +6,10 @@ import Escrow from "../artifacts/contracts/Escrow.sol/Escrow.json";
 
 const StateContext = createContext();
 
-const Caddress = "0x800184678d0A0dc69FdCEc89F881ae8dABD94e91";
+const Caddress = "0x0fd5F6C29875b0dE23A53b2B5d6925F2Ae9455e3";
 
 export const StateContextProvider = ({ children }) => {
+
     // connected user products.
     const [address, setAddress] = useState();
     // Factory contract.
@@ -18,6 +19,8 @@ export const StateContextProvider = ({ children }) => {
     const [userListedProducts, setUserListedProducts] = useState([]);
     const [arbiterProducts, setArbiterProducts] = useState([]);
     const [listingDetailsWithData, setListingDetailsWithData] = useState([]);
+
+    const [isLoading, setIsLoading] = useState(false);
     // To connect user to dapp.
     const connect = async () => {
         // Check if the browser has MetaMask installed
@@ -67,15 +70,12 @@ export const StateContextProvider = ({ children }) => {
                     const data = await getListDetails(listing);
                     arr.push(data);
                 }
-                const a = await setListingDetailsWithData(arr);
-                console.log({ listingDetailsWithData, a });
+                await setListingDetailsWithData(arr);
             } catch (error) {
                 console.log(error);
             }
         }
     };
-
-
 
     const getAllListingDetails = async () => {
         try {
@@ -153,10 +153,13 @@ export const StateContextProvider = ({ children }) => {
     }
 
     // For creating a new listing.
-    const createNewList = async () => {
-        if (contract) {
-            const newListing = await contract.newListing("title", "description", 100, "Image");
-            console.log(newListing);
+    const createNewList = async ({ title,
+        description,
+        target,
+        image,
+        address, }) => {
+        if (contract && signer) {
+            const newListing = await contract.newListing(title, description, target, image, address);
         }
     }
 
@@ -170,7 +173,8 @@ export const StateContextProvider = ({ children }) => {
                 const title = await _contract.title();
                 const description = await _contract.description();
                 const image = await _contract.image();
-                return [amount, title, description, image, bought, seller];
+                const created = await _contract.created();
+                return [amount, title, description, image, bought, seller, created];
 
             } catch (error) {
                 console.log(error);
@@ -206,6 +210,17 @@ export const StateContextProvider = ({ children }) => {
             }
         }
     }
+
+    useEffect(() => {
+        const fetchCampaigns = async () => {
+            await setIsLoading(true);
+            await getAllData();
+            await setIsLoading(false);
+        };
+        if (contract) fetchCampaigns();
+    }, [address, contract]);
+
+
     return (
         <StateContext.Provider
             value={{
@@ -225,7 +240,8 @@ export const StateContextProvider = ({ children }) => {
                 arbiterProducts,
                 getAllListingDetails,
                 listingDetailsWithData,
-                getAllData
+                getAllData,
+                isLoading, setIsLoading
             }}
         >
             {children}

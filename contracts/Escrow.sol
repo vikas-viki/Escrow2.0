@@ -21,7 +21,10 @@ contract Escrow is ReentrancyGuard {
     address public buyer;
     // Address of arbiter for the product.
     address public arbiter;
-
+    // to show when it is created.
+    uint256 public created;
+    // to show the address of seller.
+    string public _address;
     event Approved(uint256, address);
 
     AggregatorV3Interface internal priceFeed;
@@ -37,13 +40,16 @@ contract Escrow is ReentrancyGuard {
         string memory _description,
         uint256 _amountInUsd,
         string memory _image,
-        address _creator
+        address _creator,
+        string memory _address_
     ) {
         beneficiary = _creator;
         title = _title;
         description = _description;
         amountInUsd = _amountInUsd;
         image = _image;
+        created = block.timestamp;
+        _address = _address_;
         // Create a new price feed for ETH/USD from chainlink oracle.
         priceFeed = AggregatorV3Interface(
             0x694AA1769357215DE4FAC081bf1f309aDC325306
@@ -120,14 +126,16 @@ contract EscrowFactory is ReentrancyGuard {
         string _title,
         string _description,
         uint256 _amountInUsd,
-        string _image
+        string _image,
+         string _address
     );
 
     function newListing(
         string memory _title,
         string memory _description,
         uint256 _amountInUsd,
-        string memory _image
+        string memory _image,
+        string memory _address
     ) public nonReentrant returns (address) {
         // Create new escrow using contracts.
         Escrow currentEscrow = new Escrow(
@@ -135,14 +143,15 @@ contract EscrowFactory is ReentrancyGuard {
             _description,
             _amountInUsd,
             _image,
-            msg.sender
+            msg.sender,
+            _address
         );
         // Add new escrow to list.
         listings.push(currentEscrow);
         // Increment the number of lisitngs.
         noOfListings++;
 
-        emit newEscrow(msg.sender, _title, _description, _amountInUsd, _image);
+        emit newEscrow(msg.sender, _title, _description, _amountInUsd, _image, _address);
         // Return user the address of escrow for further communication.
         return address(listings[noOfListings - 1]);
     }

@@ -20,7 +20,7 @@ const Navbar = () => {
         <input
           type="text"
           id="searchInput"
-          placeholder="Search for campaigns"
+          placeholder="Search for listings"
           value={sinput}
           onChange={(e) => {
             setSinput(e.target.value);
@@ -59,7 +59,7 @@ const Navbar = () => {
       <div className="sm:flex hidden flex-row justify-end gap-4">
         <CustomButton
           btnType="button"
-          title={address ? "Create a campaign" : "Connect"}
+          title={address ? "Add new Product" : "Connect"}
           styles={address ? "bg-[#1dc071]" : "bg-[#8c6dfd]"}
           handleClick={() => {
             if (address) navigate("create-campaign");
