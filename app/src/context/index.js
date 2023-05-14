@@ -118,7 +118,8 @@ export const StateContextProvider = ({ children }) => {
                     let curr_contract = new ethers.Contract(el, Escrow.abi, signer);
                     const seller = await curr_contract.beneficiary();
                     if (seller === signer.address) {
-                        listingarr.push(curr_contract);
+                        const details = await getListDetails(curr_contract);
+                        listingarr.push(details);
                     }
                     return el;
                 });
@@ -220,6 +221,15 @@ export const StateContextProvider = ({ children }) => {
         if (contract) fetchCampaigns();
     }, [address, contract]);
 
+    
+  useEffect(() => {
+    const fetchCampaigns = async () => {
+      setIsLoading(true);
+      await getuserListedProducts();
+      setIsLoading(false);
+    };
+    if (contract) fetchCampaigns();
+  }, [address, contract]);
 
     return (
         <StateContext.Provider

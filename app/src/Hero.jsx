@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { CreateCampaign, Home } from "./pages";
 import Homepage from "./pages/Homepage";
 import Layout from "./components/Layout";
+import Listings from "./pages/Listings";
 
 const Hero = () => {
   useEffect(() => {
@@ -26,6 +27,7 @@ const Hero = () => {
         <Route path="home" element={<Layout />}>
           <Route path="/home/list" element={<CreateCampaign />} />
           <Route path='/home' element={<Home />} />
+          <Route path='/home/listings' element={<Listings />} />
         </Route>
       </Routes>
     </BrowserRouter>

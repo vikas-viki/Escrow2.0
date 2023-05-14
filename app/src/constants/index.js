@@ -1,4 +1,4 @@
-import { createCampaign, dashboard, refund, profile, withdraw } from '../assets';
+import { createCampaign, dashboard, refund, profile, withdraw, approve, cart, listings } from '../assets';
 
 export const navlinks = [
   {
@@ -12,14 +12,19 @@ export const navlinks = [
     link: '/home/list',
   },
   {
-    name: 'refund',
-    imgUrl: refund,
-    link: '/refund'
+    name: 'listings',
+    imgUrl: listings,
+    link: '/home/listings'
   },
   {
-    name: 'withdraw',
-    imgUrl: withdraw,
-    link: '/withdraw',
+    name: 'cart',
+    imgUrl: cart,
+    link: '/cart'
+  },
+  {
+    name: 'approve',
+    imgUrl: approve,
+    link: '/approve'
   },
   {
     name: 'profile',
