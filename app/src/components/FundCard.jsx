@@ -7,7 +7,6 @@ const FundCard = ({
   1: title,
   2: description,
   3: image,
-  4: bought,
   5: seller,
   6: created,
   handleClick,

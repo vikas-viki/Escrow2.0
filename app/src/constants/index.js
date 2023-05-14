@@ -24,7 +24,7 @@ export const navlinks = [
   {
     name: 'approve',
     imgUrl: approve,
-    link: '/approve'
+    link: '/home/approve'
   },
   {
     name: 'profile',

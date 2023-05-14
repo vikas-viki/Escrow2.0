@@ -1,42 +1,27 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-
 import { useStateContext } from "../Context";
 import { CountBox, CustomButton, Loader } from "../components";
-import { calculateBarPercentage, daysLeft } from "../utils";
 import { requester } from "../assets";
 
 const CampaignDetails = () => {
-  const { state } = useLocation();
-  const navigate = useNavigate();
-  const { donate, getDonations, contract, address } = useStateContext();
+  const [arbiteraddress, setArbiteraddress] = useState("");
+  const [eth, setEth] = useState(0);
+  const {
+    getTimeElapsed,
+    isLoading,
+    currentProduct,
+    buyListing,
+  } = useStateContext();
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [amount, setAmount] = useState("");
-  const [donators, setDonators] = useState([]);
-  const [isChecked, setIsChecked] = useState(false);
-  const remainingDays = daysLeft(state.deadline * 1000);
-  const handleCheckBoxChange = () => {
-    setIsChecked(!isChecked);
-  };
-  const fetchDonators = async () => {
-    const data = await getDonations(state.pId);
+  const getETH = async(usd) => {
+    const eth = await currentProduct[7].convertUSDToEther(usd);
+    const _eth = (Number(eth) / 1000000000000000000).toString().slice(0, 6);
+    setEth(_eth);
+  }
 
-    setDonators(data);
-  };
-
-  useEffect(() => {
-    if (contract) fetchDonators();
-  }, [contract, address]);
-
-  const handleDonate = async () => {
-    setIsLoading(true);
-
-    await donate(state.pId, amount, isChecked);
-
-    navigate("/");
-    setIsLoading(false);
-  };
+  useEffect(()=>{
+    getETH(currentProduct[0]);
+  },[]);
 
   return (
     <div>
@@ -45,31 +30,16 @@ const CampaignDetails = () => {
       <div className="w-full flex md:flex-row flex-col mt-10 gap-[30px]">
         <div className="flex-1 flex-col">
           <img
-            src={state.image}
+            src={currentProduct[3]}
             alt="campaign"
             className="w-full h-[410px] object-cover rounded-xl"
           />
-          <div className="relative w-full h-[5px] bg-[#3a3a43] mt-2">
-            <div
-              className="absolute h-full bg-[#4acd8d]"
-              style={{
-                width: `${calculateBarPercentage(
-                  state.target,
-                  state.amountCollected
-                )}%`,
-                maxWidth: "100%",
-              }}
-            ></div>
-          </div>
         </div>
 
         <div className="flex md:w-[150px] w-full flex-wrap justify-between gap-[30px]">
-          <CountBox title="Days Left" value={remainingDays} />
-          <CountBox
-            title={`Raised of ${state.target}`}
-            value={state.amountCollected ? state.amountCollected : 0}
-          />
-          <CountBox title="Total Backers" value={donators.length} />
+          <CountBox title="Listed" value={getTimeElapsed(currentProduct[6]).split(' ')[0] +" " +  getTimeElapsed(currentProduct[6]).split(' ')[1]} />
+          <CountBox title={"Amount"} value={"$"+currentProduct[0]} />
+          <CountBox title="ETH value" value={eth} />
         </div>
       </div>
 
@@ -89,8 +59,8 @@ const CampaignDetails = () => {
                 />
               </div>
               <div>
-                <h4 className="font-epilogue font-semibold text-[14px] text-white break-all">
-                  {state.owner}
+                <h4 className="font-epilogue text-[14px] text-white break-all">
+                  {currentProduct[5]}
                 </h4>
               </div>
             </div>
@@ -98,41 +68,13 @@ const CampaignDetails = () => {
 
           <div>
             <h4 className="font-epilogue font-semibold text-[18px] text-white uppercase">
-              Story
+              Description
             </h4>
 
             <div className="mt-[20px]">
               <p className="font-epilogue font-normal text-[16px] text-[#808191] leading-[26px] text-justify">
-                {state.description}
+                {currentProduct[2]}
               </p>
-            </div>
-          </div>
-
-          <div>
-            <h4 className="font-epilogue font-semibold text-[18px] text-white uppercase">
-              Donators
-            </h4>
-
-            <div className="mt-[20px] flex flex-col gap-4">
-              {donators.length > 0 ? (
-                donators.map((item, index) => (
-                  <div
-                    key={`${item.donator}-${index}`}
-                    className="flex justify-between items-center gap-4"
-                  >
-                    <p className="font-epilogue font-normal text-[16px] text-[#b2b3bd] leading-[26px] break-ll">
-                      {index + 1}. {item.donator}
-                    </p>
-                    <p className="font-epilogue font-normal text-[16px] text-[#808191] leading-[26px] break-ll">
-                      {item.donation} ETH
-                    </p>
-                  </div>
-                ))
-              ) : (
-                <p className="font-epilogue font-normal text-[16px] text-[#808191] leading-[26px] text-justify">
-                  No donators yet. Be the first one!
-                </p>
-              )}
             </div>
           </div>
         </div>
@@ -143,48 +85,33 @@ const CampaignDetails = () => {
           </h4>
 
           <div className="mt-[20px] flex flex-col p-4 bg-[#1c1c24] rounded-[10px]">
-            <p className="font-epilogue fount-medium text-[20px] leading-[30px] text-center text-[#808191]">
-              Fund the campaign
+            <p className="font-epilogue fount-medium text-[19px] leading-[30px] text-center text-[#808191]">
+              Buy the product
             </p>
             <div className="mt-[30px]">
+              <label
+                htmlFor="arbiterAdd"
+                className="font-epilogue fount-medium text-[15px] leading-[30px] text-center text-[#808191]"
+              >
+                Approver address *
+              </label>
               <input
-                type="number"
-                placeholder="ETH 0.1"
+                type="text"
+                placeholder="0xab34c2d47d..."
                 step="0.01"
+                required
+                id="arbiterAdd"
                 className="w-full py-[10px] sm:px-[20px] px-[15px] outline-none border-[1px] border-[#3a3a43] bg-transparent font-epilogue text-white text-[18px] leading-[30px] placeholder:text-[#4b5264] rounded-[10px]"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
+                value={arbiteraddress}
+                onChange={(e) => setArbiteraddress(e.target.value)}
               />
-              <div className="flex items-center mb-4 mt-4">
-                <label
-                  htmlFor="agree"
-                  className="ml-2 text-md font-medium font-epilogue leading-[30px] text-[#808191]"
-                >
-                <input
-                  id="agree"
-                  type="checkbox"
-                  checked={isChecked}
-                  onChange={handleCheckBoxChange}
-                  className=" text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                />
-                   &nbsp; Allow campaign owner to withdraw funds even if the campaign target not met.
-                </label>
-              </div>
-              <div className="my-[20px] p-4 bg-[#13131a] rounded-[10px]">
-                <h4 className="font-epilogue font-semibold text-[14px] leading-[22px] text-white">
-                  Back it because you believe in it.
-                </h4>
-                <p className="mt-[20px] font-epilogue font-normal leading-[22px] text-[#808191]">
-                  Support the project for no reward, just because it speaks to
-                  you.
-                </p>
-              </div>
-
               <CustomButton
                 btnType="button"
-                title="Fund Campaign"
-                styles="w-full bg-[#8c6dfd]"
-                handleClick={handleDonate}
+                title="Buy product"
+                styles="w-full bg-[#8c6dfd] mt-[15px]"
+                handleClick={() => {
+                  buyListing(currentProduct[7], arbiteraddress);
+                }}
               />
             </div>
           </div>

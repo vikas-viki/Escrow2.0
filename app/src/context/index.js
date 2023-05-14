@@ -19,7 +19,7 @@ export const StateContextProvider = ({ children }) => {
     const [userListedProducts, setUserListedProducts] = useState([]);
     const [arbiterProducts, setArbiterProducts] = useState([]);
     const [listingDetailsWithData, setListingDetailsWithData] = useState([]);
-
+    const [currentProduct, setCurrentProduct] = useState();
     const [isLoading, setIsLoading] = useState(false);
     // To connect user to dapp.
     const connect = async () => {
@@ -141,7 +141,8 @@ export const StateContextProvider = ({ children }) => {
                     let curr_contract = new ethers.Contract(el, Escrow.abi, signer);
                     const arbiter = await curr_contract.arbiter();
                     if (arbiter === signer.address) {
-                        listingarr.push(curr_contract);
+                        const details = await getListDetails(curr_contract);
+                        listingarr.push(details);
                     }
                     return el;
                 });
@@ -175,7 +176,8 @@ export const StateContextProvider = ({ children }) => {
                 const description = await _contract.description();
                 const image = await _contract.image();
                 const created = await _contract.created();
-                return [amount, title, description, image, bought, seller, created];
+                const approved = await _contract.isApproved();
+                return [amount.toString(), title.toString(), description.toString(), image.toString(), bought.toString(), seller.toString(), created.toString(), _contract, approved.toString()];
 
             } catch (error) {
                 console.log(error);
@@ -187,7 +189,8 @@ export const StateContextProvider = ({ children }) => {
     const buyListing = async (_contract, _arbiter) => {
         if (_arbiter && _contract) {
             try {
-                await _contract.buy(_arbiter);
+                const eth = await currentProduct[7].convertUSDToEther(currentProduct[0]);
+                await _contract.buy(_arbiter, {value: eth});
                 await getAllData();
             } catch (error) {
                 console.log(error);
@@ -221,15 +224,42 @@ export const StateContextProvider = ({ children }) => {
         if (contract) fetchCampaigns();
     }, [address, contract]);
 
-    
-  useEffect(() => {
-    const fetchCampaigns = async () => {
-      setIsLoading(true);
-      await getuserListedProducts();
-      setIsLoading(false);
-    };
-    if (contract) fetchCampaigns();
-  }, [address, contract]);
+
+    useEffect(() => {
+        const fetchCampaigns = async () => {
+            setIsLoading(true);
+            await getuserListedProducts();
+            setIsLoading(false);
+        };
+        if (contract) fetchCampaigns();
+    }, [address, contract]);
+
+    useEffect(() => {
+        const fetchCampaigns = async () => {
+            setIsLoading(true);
+            await getArbiterProducts();
+            setIsLoading(false);
+        };
+        fetchCampaigns();
+    }, [address, contract]);
+
+    // to convert timestamp to days, hours & minutes respectively.
+    function getTimeElapsed(timestamp) {
+        const now = new Date().getTime();
+        const timeDiff = (now - timestamp * 1000) / 1000;
+        if (timeDiff >= 86400) {
+            const days = Math.floor(timeDiff / 86400);
+            return days + (days === 1 ? " day" : " days") + " ago";
+        } else if (timeDiff >= 3600) {
+            const hours = Math.floor(timeDiff / 3600);
+            return hours + (hours === 1 ? " hour" : " hours") + " ago";
+        } else if (timeDiff >= 60) {
+            const minutes = Math.floor(timeDiff / 60);
+            return minutes + (minutes === 1 ? " minute" : " minutes") + " ago";
+        } else {
+            return "Just now";
+        }
+    }
 
     return (
         <StateContext.Provider
@@ -251,7 +281,9 @@ export const StateContextProvider = ({ children }) => {
                 getAllListingDetails,
                 listingDetailsWithData,
                 getAllData,
-                isLoading, setIsLoading
+                isLoading, setIsLoading,
+                getTimeElapsed,
+                currentProduct, setCurrentProduct
             }}
         >
             {children}

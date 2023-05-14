@@ -1,14 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import FundCard from "./FundCard";
 import { loader } from "../assets";
+import { useStateContext } from "../Context";
 
 const Displaylistings = ({ title, isLoading, listings }) => {
   const navigate = useNavigate();
 
+  const { setCurrentProduct, setIsLoading } = useStateContext();
+
   const handleNavigate = (listing) => {
-    navigate(`/listing-details/${listing.title}`, { state: listing });
+    setIsLoading(true);
+    setCurrentProduct(listing);
+    navigate(`/home/${listing[6]}`);
+    setIsLoading(false);
   };
 
   return (
@@ -17,7 +23,11 @@ const Displaylistings = ({ title, isLoading, listings }) => {
         {title} ({!isLoading && listings.length})
       </h1>
 
-      <div className={`flex flex-wrap mt-[20px] gap-[26px] items-center ${isLoading && 'justify-center'}`}>
+      <div
+        className={`flex flex-wrap mt-[20px] gap-[26px] items-center ${
+          isLoading && "justify-center"
+        }`}
+      >
         {isLoading && (
           <div className="flex flex-col items-center justify-center">
             <img
@@ -25,7 +35,9 @@ const Displaylistings = ({ title, isLoading, listings }) => {
               alt="loader"
               className="w-[100px] h-[100px] object-contain"
             />
-            <p className="font-epilogue text-[15px] text-white font-semibold leading-[1px] opacity-30">We're preparing everything for you...</p>
+            <p className="font-epilogue text-[15px] text-white font-semibold leading-[1px] opacity-30">
+              We're preparing everything for you...
+            </p>
           </div>
         )}
 
@@ -43,7 +55,7 @@ const Displaylistings = ({ title, isLoading, listings }) => {
             <FundCard
               key={i}
               {...listing}
-              handleClick={() => handleNavigate(i)}
+              handleClick={() => handleNavigate(listing)}
             />
           ))}
       </div>
