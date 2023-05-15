@@ -28,12 +28,14 @@ const Homepage = () => {
             </span>
           </div>
           <div>
-            <button
-              data-aos="fade-up-right"
-              className="bg-[#4F4FDE] px-[23px] rounded-[4px] py-[16px] text-[#EEEEEE] text-[1.188rem]"
-            >
-              <Link to="/home">Explore now</Link>
-            </button>
+            <Link to="/home">
+              <button
+                data-aos="fade-up-right"
+                className="bg-[#4F4FDE] px-[23px] rounded-[4px] py-[16px] text-[#EEEEEE] text-[1.188rem]"
+              >
+                Explore now
+              </button>
+            </Link>
           </div>
         </div>
         <div className="img-frame select-none">

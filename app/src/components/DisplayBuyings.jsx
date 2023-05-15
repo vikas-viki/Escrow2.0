@@ -4,9 +4,8 @@ import { loader } from "../assets";
 import { CustomButton } from ".";
 import { useStateContext } from "../Context";
 
-const DisplayApprovals = ({ title, isLoading, products }) => {
-  const { approveListing, getTimeElapsed } = useStateContext(); 
-  const [productStatus, setProductStatus] = useState(true);
+const DisplayBuyings = ({ title, isLoading, products }) => {
+  const { getTimeElapsed } = useStateContext(); 
 
   return (
     <div>
@@ -62,7 +61,7 @@ const DisplayApprovals = ({ title, isLoading, products }) => {
                       className="w-[17px] h-[17px] object-contain"
                     />
                     <p className="ml-[12px] mt-[2px] font-epilogue font-medium text-[12px] text-[#808191]">
-                      Approvals
+                      Buyings
                     </p>
                   </div>
 
@@ -94,49 +93,13 @@ const DisplayApprovals = ({ title, isLoading, products }) => {
                     <span className="font-epilogue font-semibold text-[#9f9fab]  text-left leading-[18px] mb-[10px]">
                       Product status{" "}
                     </span>
-                    <br />
-                    {!approved && (
-                      <>
-                        <label
-                          htmlFor="productStatus1"
-                          className="font-epilogue font-normal text-[#808191] text-left leading-[18px]"
-                        >
-                          {" "}
-                          Good{" "}
-                        </label>
-                        <input
-                          type="radio"
-                          name="productStatus"
-                          id="productStatus1"
-                          onClick={(e) => {
-                            setProductStatus(e.target.value);
-                          }}
-                        />
-                        <label
-                          htmlFor="productStatus2"
-                          className="font-epilogue font-normal text-[#808191] text-left leading-[18px]"
-                        >
-                          {" "}
-                          Not good{" "}
-                        </label>
-                        <input
-                          type="radio"
-                          name="productStatus"
-                          id="productStatus2"
-                          onClick={(e) => {
-                            setProductStatus(e.target.value);
-                          }}
-                        />
-                      </>
-                    )}
                     <CustomButton
                       btnType="button"
-                      title={approved ? "Approved" : "Approve the product"}
+                      title={approved ? "Approved" : "Yet to be approved"}
                       styles={`bg-[#8c6dfd] w-full mt-[10px] ${
                         approved && "disabled"
                       }`}
                       handleClick={() => {
-                        !approved && approveListing(_contract, productStatus);
                       }}
                     />
                   </div>
@@ -149,4 +112,4 @@ const DisplayApprovals = ({ title, isLoading, products }) => {
   );
 };
 
-export default DisplayApprovals;
+export default DisplayBuyings;

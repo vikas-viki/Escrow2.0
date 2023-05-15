@@ -3,7 +3,7 @@ import { useStateContext } from "../Context";
 import { CountBox, CustomButton, Loader } from "../components";
 import { requester } from "../assets";
 
-const CampaignDetails = () => {
+const ProductDetails = () => {
   const [arbiteraddress, setArbiteraddress] = useState("");
   const [eth, setEth] = useState(0);
   const {
@@ -121,4 +121,4 @@ const CampaignDetails = () => {
   );
 };
 
-export default CampaignDetails;
+export default ProductDetails;

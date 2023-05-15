@@ -21,6 +21,8 @@ export const StateContextProvider = ({ children }) => {
     const [listingDetailsWithData, setListingDetailsWithData] = useState([]);
     const [currentProduct, setCurrentProduct] = useState();
     const [isLoading, setIsLoading] = useState(false);
+
+
     // To connect user to dapp.
     const connect = async () => {
         // Check if the browser has MetaMask installed
@@ -96,12 +98,12 @@ export const StateContextProvider = ({ children }) => {
                     let curr_contract = new ethers.Contract(el, Escrow.abi, signer);
                     const buyer = await curr_contract.buyer();
                     if (buyer === signer.address) {
-                        listingarr.push(curr_contract);
+                        const details = await getListDetails(curr_contract);
+                        listingarr.push(details);
                     }
                     return el;
                 });
                 setUserBroughtProducts(listingarr);
-                console.log(listingarr);
             } catch (error) {
                 console.log(error);
             }
@@ -124,7 +126,6 @@ export const StateContextProvider = ({ children }) => {
                     return el;
                 });
                 setUserListedProducts(listingarr);
-                console.log(listingarr);
             } catch (error) {
                 console.log(error);
             }
@@ -147,7 +148,6 @@ export const StateContextProvider = ({ children }) => {
                     return el;
                 });
                 setArbiterProducts(listingarr);
-                console.log(listingarr);
             } catch (error) {
                 console.log(error);
             }
@@ -215,6 +215,7 @@ export const StateContextProvider = ({ children }) => {
         }
     }
 
+    // To get all the listed products.
     useEffect(() => {
         const fetchCampaigns = async () => {
             await setIsLoading(true);
@@ -224,7 +225,7 @@ export const StateContextProvider = ({ children }) => {
         if (contract) fetchCampaigns();
     }, [address, contract]);
 
-
+    // To get all the user listed products.
     useEffect(() => {
         const fetchCampaigns = async () => {
             setIsLoading(true);
@@ -234,10 +235,21 @@ export const StateContextProvider = ({ children }) => {
         if (contract) fetchCampaigns();
     }, [address, contract]);
 
+    // To get all the arbiter products.
     useEffect(() => {
         const fetchCampaigns = async () => {
             setIsLoading(true);
             await getArbiterProducts();
+            setIsLoading(false);
+        };
+        fetchCampaigns();
+    }, [address, contract]);
+
+    // To get all the user bought products.
+    useEffect(() => {
+        const fetchCampaigns = async () => {
+            setIsLoading(true);
+            await getuserBoughtProducts();
             setIsLoading(false);
         };
         fetchCampaigns();

@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ethers } from "ethers";
 
 import { useStateContext } from "../Context";
 import { money } from "../assets";
 import { CustomButton, FormField, Loader } from "../components";
 import { checkIfImage } from "../utils";
 
-const CreateCampaign = () => {
+const ListNewProduct = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const { createNewList } = useStateContext();
@@ -119,4 +118,4 @@ const CreateCampaign = () => {
   );
 };
 
-export default CreateCampaign;
+export default ListNewProduct;

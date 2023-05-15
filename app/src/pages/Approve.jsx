@@ -3,12 +3,7 @@ import { useStateContext } from "../Context/index.js";
 import DisplayApprovals from "../components/DisplayApprovals.jsx";
 
 const Approve = () => {
-
   const { isLoading, arbiterProducts } = useStateContext();
-
-
-
-
 
   return (
     <DisplayApprovals

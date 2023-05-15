@@ -2,11 +2,13 @@ import React, { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { CampaignDetails, CreateCampaign, Home } from "./pages";
+import { Home, Profile } from "./pages";
 import Homepage from "./pages/Homepage";
 import Layout from "./components/Layout";
-import Listings from "./pages/Listings";
 import Approve from "./pages/Approve";
+import ProductDetails from "./pages/ProductDetails";
+import ListNewProduct from "./pages/ListNewProduct";
+import Cart from "./pages/Cart";
 
 const Hero = () => {
   useEffect(() => {
@@ -26,11 +28,12 @@ const Hero = () => {
       <Routes>
         <Route path="/" element={<Homepage />} />
         <Route path="home" element={<Layout />}>
-          <Route path="/home/list" element={<CreateCampaign />} />
+          <Route path="/home/list" element={<ListNewProduct />} />
           <Route path='/home' element={<Home />} />
-          <Route path='/home/listings' element={<Listings />} />
+          <Route path='/home/profile' element={<Profile />} />
           <Route path='/home/approve' element={<Approve />} />
-          <Route path="/home/:id" element={<CampaignDetails />} />
+          <Route path='/home/cart' element={<Cart />} />
+          <Route path="/home/:id" element={<ProductDetails />} />
         </Route>
       </Routes>
     </BrowserRouter>

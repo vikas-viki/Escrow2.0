@@ -67,7 +67,7 @@ const Navbar = () => {
           }}
         />
 
-        <Link to="/profile">
+        <Link to="/home/profile">
           <div className="w-[52px] h-[52px] rounded-full bg-[#2c2f32] flex justify-center items-center cursor-pointer">
             <img
               src={user}
@@ -137,7 +137,7 @@ const Navbar = () => {
               title={address ? "Create a campaign" : "Connect"}
               styles={address ? "bg-[#1dc071]" : "bg-[#8c6dfd]"}
               handleClick={() => {
-                if (address) navigate("create-campaign");
+                if (address) navigate("/home/list");
                 else connect();
               }}
             />
