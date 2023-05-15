@@ -95,9 +95,9 @@ const DisplayBuyings = ({ title, isLoading, products }) => {
                     </span>
                     <CustomButton
                       btnType="button"
-                      title={approved ? "Approved" : "Yet to be approved"}
+                      title={approved === true ? "Approved" : "Yet to be approved"}
                       styles={`bg-[#8c6dfd] w-full mt-[10px] ${
-                        approved && "disabled"
+                        approved === true && "disabled"
                       }`}
                       handleClick={() => {
                       }}

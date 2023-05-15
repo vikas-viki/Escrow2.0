@@ -12,7 +12,7 @@ const Navbar = () => {
   const [toggleDrawer, setToggleDrawer] = useState(false);
   const [sinput, setSinput] = useState("");
   const [called, setCalled] = useState(false);
-  const { connect, address, getSpecificCampaign } = useStateContext();
+  const { connect, address, getAllData } = useStateContext();
 
   return (
     <div className="flex md:flex-row flex-col-reverse justify-between mb-[35px] gap-6">
@@ -30,28 +30,20 @@ const Navbar = () => {
 
         <div
           className="w-[72px] h-full rounded-[20px] bg-[#4acd8d] flex justify-center items-center cursor-pointer"
+          onClick={async () => {
+            getAllData(called === true ? "" : sinput);
+            called === true && setSinput("");
+            setCalled((prev) => !prev);
+          }}
         >
           {!called ? (
             <img
               src={search}
               alt="search"
               className="w-[15px] h-[15px] object-contain"
-              onClick={async () => {
-                getSpecificCampaign(sinput);
-                setCalled(true);
-              }}
             />
           ) : (
-            <span
-              className="font-bold"
-              onClick={() => {
-                getSpecificCampaign("");
-                setCalled(false);
-                setSinput("");
-              }}
-            >
-              X
-            </span>
+            <span className="font-bold">X</span>
           )}
         </div>
       </div>

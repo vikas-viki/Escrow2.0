@@ -103,10 +103,10 @@ const DisplayListings = ({ title, isLoading, list }) => {
                   </div>
                   <div
                     className={`flex justify-center w-full text-center mt-[12px] ${
-                      bought ? "bg-green-500" : "bg-red-400"
+                      bought === true ? "bg-green-500" : "bg-red-400"
                     } font-epilogue font-semibold text-[16px] leading-[26px] text-white py-[12px] px-4 rounded-[10px]`}
                   >
-                    {bought ? "Sold" : "Yet to be sold"}
+                    {bought === true ? "Sold" : "Yet to be sold"}
                   </div>
                 </div>
               </div>

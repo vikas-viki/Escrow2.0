@@ -55,15 +55,17 @@ export const StateContextProvider = ({ children }) => {
     };
 
     // Returns listings which haven't been bought yet.
-    const getAllData = async () => {
+    const getAllData = async (_search = '') => {
         if (contract && signer.address) {
             try {
+                setIsLoading(true);
                 const current_listings = await contract.getListings();
                 const listingarr = [];
                 for (const el of current_listings) {
                     const curr_contract = new ethers.Contract(el, Escrow.abi, signer);
                     const bought = await curr_contract.bought();
-                    if (bought === false) {
+                    const title = await curr_contract.title();
+                    if (bought === false && title.toLowerCase().includes(_search)) {
                         listingarr.push(curr_contract);
                     }
                 }
@@ -73,6 +75,7 @@ export const StateContextProvider = ({ children }) => {
                     arr.push(data);
                 }
                 await setListingDetailsWithData(arr);
+                setIsLoading(false);
             } catch (error) {
                 console.log(error);
             }
