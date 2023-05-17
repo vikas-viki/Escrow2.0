@@ -1,6 +1,5 @@
 import React, { useContext, createContext, useState, useEffect } from "react";
 import { ethers } from "ethers";
-
 import EscrowFactory from '../artifacts/contracts/Escrow.sol/EscrowFactory.json';
 import Escrow from "../artifacts/contracts/Escrow.sol/Escrow.json";
 
@@ -35,8 +34,7 @@ export const StateContextProvider = ({ children }) => {
             const provider = new ethers.BrowserProvider(
                 window.ethereum
             );
-            await provider.send("eth_requestAccounts");
-
+            await provider.send("wallet_switchEthereumChain", [{chainId: ethers.toBeHex(11155111)}]);
             const _signer = await provider.getSigner();
             const network = await _signer.provider._detectNetwork();
             await setSigner(_signer);
@@ -46,7 +44,7 @@ export const StateContextProvider = ({ children }) => {
                 const contract_factory = new ethers.Contract(Caddress, EscrowFactory.abi, signer);
                 await setContract(contract_factory);
             } else {
-                alert("Please connect to sepolia netwrork");
+                await alert("Please connect to sepolia netwrork");
                 window.location.reload();
             }
         } catch (error) {
