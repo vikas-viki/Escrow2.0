@@ -18,6 +18,7 @@ import requester from "./requester.png";
 import creator from "./creator.png";
 import cart from "./cart.png";
 import listings from "./listings.png";
+import hiw from "./howitworks.png";
 
 export {
   tagType,
@@ -39,5 +40,6 @@ export {
   creator,
   approve,
   cart,
-  listings
+  listings,
+  hiw
 };

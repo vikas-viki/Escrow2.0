@@ -9,6 +9,7 @@ import Approve from "./pages/Approve";
 import ProductDetails from "./pages/ProductDetails";
 import ListNewProduct from "./pages/ListNewProduct";
 import Cart from "./pages/Cart";
+import Howitworks from "./pages/Howitworks";
 
 const Hero = () => {
   useEffect(() => {
@@ -34,6 +35,7 @@ const Hero = () => {
           <Route path='/home/approve' element={<Approve />} />
           <Route path='/home/cart' element={<Cart />} />
           <Route path="/home/:id" element={<ProductDetails />} />
+          <Route path='/home/How_it_works' element={<Howitworks />} />
         </Route>
       </Routes>
     </BrowserRouter>

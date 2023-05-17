@@ -1,4 +1,4 @@
-import { createCampaign, dashboard, profile, approve, cart } from '../assets';
+import { createCampaign, dashboard, profile, approve, cart, hiw } from '../assets';
 
 export const navlinks = [
   {
@@ -25,5 +25,10 @@ export const navlinks = [
     name: 'profile',
     imgUrl: profile,
     link: '/home/profile',
-  }
+  },
+  {
+    name: 'How_it_works',
+    imgUrl: hiw,
+    link: '/home/How_it_works',
+  },
 ];
