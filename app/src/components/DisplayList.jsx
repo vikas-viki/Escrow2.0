@@ -44,7 +44,7 @@ const Displaylistings = ({ title, isLoading, listings }) => {
         {!isLoading && listings.length === 0 && (
           <p className="font-epilogue font-semibold text-[14px] leading-[30px] text-[#818183]">
             {window.location.pathname === "/home"
-              ? "No listings yet."
+              ? "No listings yet ( referesh if created just now )."
               : "You have not created any listings yet."}
           </p>
         )}

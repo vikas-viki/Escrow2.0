@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useStateContext } from "../Context";
-import { logo, logout, sun } from "../assets";
+import { logo, logout } from "../assets";
 import { navlinks } from "../constants";
 
 const Icon = ({ styles, name, imgUrl, isActive, disabled, handleClick }) => (
@@ -26,13 +26,17 @@ const Icon = ({ styles, name, imgUrl, isActive, disabled, handleClick }) => (
 );
 
 const Sidebar = () => {
-  const { setAddress } = useStateContext();
+  const { setAddress, isActive, setIsActive } = useStateContext();
   const navigate = useNavigate();
-  const [isActive, setIsActive] = useState("dashboard");
 
   return (
     <div className="flex justify-between items-center flex-col sticky top-5 h-[93vh]">
-      <Link to="/">
+      <Link
+        to="/"
+        onClick={() => {
+          setIsActive("dashboard");
+        }}
+      >
         <Icon styles="w-[52px] h-[52px] bg-[#2c2f32]" imgUrl={logo} />
       </Link>
 

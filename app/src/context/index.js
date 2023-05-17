@@ -5,7 +5,7 @@ import Escrow from "../artifacts/contracts/Escrow.sol/Escrow.json";
 
 const StateContext = createContext();
 
-const Caddress = "0x0fd5F6C29875b0dE23A53b2B5d6925F2Ae9455e3";
+const Caddress = "0xB7AA5D074D4A498C52793f395e86fa37043a4485";
 
 export const StateContextProvider = ({ children }) => {
 
@@ -20,7 +20,7 @@ export const StateContextProvider = ({ children }) => {
     const [listingDetailsWithData, setListingDetailsWithData] = useState([]);
     const [currentProduct, setCurrentProduct] = useState();
     const [isLoading, setIsLoading] = useState(false);
-
+    const [isActive, setIsActive] = useState("dashboard");
 
     // To connect user to dapp.
     const connect = async () => {
@@ -34,7 +34,7 @@ export const StateContextProvider = ({ children }) => {
             const provider = new ethers.BrowserProvider(
                 window.ethereum
             );
-            await provider.send("wallet_switchEthereumChain", [{chainId: ethers.toBeHex(11155111)}]);
+            await provider.send("wallet_switchEthereumChain", [{ chainId: ethers.toBeHex(11155111) }]);
             const _signer = await provider.getSigner();
             const network = await _signer.provider._detectNetwork();
             await setSigner(_signer);
@@ -163,6 +163,9 @@ export const StateContextProvider = ({ children }) => {
         address, }) => {
         if (contract && signer) {
             const newListing = await contract.newListing(title, description, target, image, address);
+            setTimeout(async () => {
+                await getAllData("");
+            }, 3000);
         }
     }
 
@@ -178,7 +181,7 @@ export const StateContextProvider = ({ children }) => {
                 const image = await _contract.image();
                 const created = await _contract.created();
                 const approved = await _contract.isApproved();
-                return [amount.toString(), title.toString(), description.toString(), image.toString(), bought.toString(), seller.toString(), created.toString(), _contract, approved.toString()];
+                return [amount.toString(), title.toString(), description.toString(), image.toString(), bought.toString(), seller.toString(), created.toString(), _contract, approved];
 
             } catch (error) {
                 console.log(error);
@@ -191,7 +194,7 @@ export const StateContextProvider = ({ children }) => {
         if (_arbiter && _contract) {
             try {
                 const eth = await currentProduct[7].convertUSDToEther(currentProduct[0]);
-                await _contract.buy(_arbiter, {value: eth});
+                await _contract.buy(_arbiter, { value: eth });
                 await getAllData();
             } catch (error) {
                 console.log(error);
@@ -296,7 +299,8 @@ export const StateContextProvider = ({ children }) => {
                 getAllData,
                 isLoading, setIsLoading,
                 getTimeElapsed,
-                currentProduct, setCurrentProduct
+                currentProduct, setCurrentProduct,
+                isActive, setIsActive
             }}
         >
             {children}

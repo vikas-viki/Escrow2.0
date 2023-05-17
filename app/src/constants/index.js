@@ -7,7 +7,7 @@ export const navlinks = [
     link: '/home',
   },
   {
-    name: 'campaign',
+    name: 'list',
     imgUrl: createCampaign,
     link: '/home/list',
   },

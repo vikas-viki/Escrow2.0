@@ -5,7 +5,7 @@ import { CustomButton } from ".";
 import { useStateContext } from "../Context";
 
 const DisplayApprovals = ({ title, isLoading, products }) => {
-  const { approveListing, getTimeElapsed } = useStateContext(); 
+  const { approveListing, getTimeElapsed } = useStateContext();
   const [productStatus, setProductStatus] = useState(true);
 
   return (
@@ -43,6 +43,7 @@ const DisplayApprovals = ({ title, isLoading, products }) => {
               _contract,
               approved,
             ] = product;
+            console.log(product);
             return (
               <div
                 key={i}
@@ -131,12 +132,15 @@ const DisplayApprovals = ({ title, isLoading, products }) => {
                     )}
                     <CustomButton
                       btnType="button"
-                      title={approved === true ? "Approved" : "Approve the product"}
+                      title={
+                        approved === true ? "Approved" : "Approve the product"
+                      }
                       styles={`bg-[#8c6dfd] w-full mt-[10px] ${
                         approved === true && "disabled"
                       }`}
                       handleClick={() => {
-                        !approved && approveListing(_contract, productStatus);
+                        approved === false &&
+                          approveListing(_contract, productStatus);
                       }}
                     />
                   </div>

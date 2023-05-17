@@ -8,11 +8,11 @@ import { navlinks } from "../constants";
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const [isActive, setIsActive] = useState("dashboard");
   const [toggleDrawer, setToggleDrawer] = useState(false);
   const [sinput, setSinput] = useState("");
   const [called, setCalled] = useState(false);
-  const { connect, address, getAllData } = useStateContext();
+  const { connect, address, getAllData, isActive, setIsActive } =
+    useStateContext();
 
   return (
     <div className="flex md:flex-row flex-col-reverse justify-between mb-[35px] gap-6">
@@ -54,12 +54,19 @@ const Navbar = () => {
           title={address ? "Add new Product" : "Connect"}
           styles={address ? "bg-[#1dc071]" : "bg-[#8c6dfd]"}
           handleClick={() => {
-            if (address) navigate("/home/list");
-            else connect();
+            if (address) {
+              navigate("/home/list");
+              setIsActive("list");
+            } else connect();
           }}
         />
 
-        <Link to="/home/profile">
+        <Link
+          to="/home/profile"
+          onClick={() => {
+            setIsActive("profile");
+          }}
+        >
           <div className="w-[52px] h-[52px] rounded-full bg-[#2c2f32] flex justify-center items-center cursor-pointer">
             <img
               src={user}
