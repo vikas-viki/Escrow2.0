@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useStateContext } from "../Context";
+import { useStateContext } from "../context";
 import { mainlogo, logout } from "../assets";
 import { navlinks } from "../constants";
 
@@ -37,7 +37,7 @@ const Sidebar = () => {
           setIsActive("dashboard");
         }}
       >
-        <img className="w-[50px] h-[50px] bg-[#2c2f32] rounded-[12px] " src={mainlogo} alt='w3'/>
+        <img className="w-[47px] h-[47px] bg-[#2c2f32] rounded-[12px] " src={mainlogo} alt='w3'/>
       </Link>
 
       <div className="flex-1 flex flex-col justify-between items-center bg-[#1c1c24] rounded-[20px] w-[76px] py-4 mt-12">

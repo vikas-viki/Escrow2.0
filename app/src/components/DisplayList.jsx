@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 
 import FundCard from "./FundCard";
 import { loader } from "../assets";
-import { useStateContext } from "../Context";
+import { useStateContext } from "../context";
 
 const Displaylistings = ({ title, isLoading, listings }) => {
   const navigate = useNavigate();

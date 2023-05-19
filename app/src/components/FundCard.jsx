@@ -1,6 +1,7 @@
 import React from "react";
 
 import { creator, tagType } from "../assets";
+import { useStateContext } from "../context";
 
 const FundCard = ({
   0: amount,
@@ -11,22 +12,8 @@ const FundCard = ({
   6: created,
   handleClick,
 }) => {
-  function getTimeElapsed(timestamp) {
-    const now = new Date().getTime();
-    const timeDiff = (now - timestamp * 1000) / 1000;
-    if (timeDiff >= 86400) {
-      const days = Math.floor(timeDiff / 86400);
-      return days + (days === 1 ? " day" : " days") + " ago";
-    } else if (timeDiff >= 3600) {
-      const hours = Math.floor(timeDiff / 3600);
-      return hours + (hours === 1 ? " hour" : " hours") + " ago";
-    } else if (timeDiff >= 60) {
-      const minutes = Math.floor(timeDiff / 60);
-      return minutes + (minutes === 1 ? " minute" : " minutes") + " ago";
-    } else {
-      return "Just now";
-    }
-  }
+  const { getTimeElapsed } = useStateContext();
+
   return (
     <div
       className="sm:w-[288px] w-full rounded-[15px] bg-[#1c1c24] cursor-pointer"
@@ -55,7 +42,8 @@ const FundCard = ({
             {title}
           </h3>
           <p className="mt-[5px] font-epilogue font-normal text-[#808191] text-left leading-[18px] truncate">
-            {description.slice(0, 20) + (description.length >= 20 ? "..." : ".")}
+            {description.slice(0, 20) +
+              (description.length >= 20 ? "..." : ".")}
           </p>
         </div>
 

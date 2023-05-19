@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { tagType } from "../assets";
 import { loader } from "../assets";
 import { CustomButton } from ".";
-import { useStateContext } from "../Context";
+import { useStateContext } from "../context";
 
 const DisplayBuyings = ({ title, isLoading, products }) => {
   const { getTimeElapsed } = useStateContext(); 

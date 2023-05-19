@@ -1,25 +1,11 @@
 import React from "react";
 import { tagType } from "../assets";
 import { loader } from "../assets";
+import { useStateContext } from "../context";
 
 const DisplayListings = ({ title, isLoading, list }) => {
 
-  function getTimeElapsed(timestamp) {
-    const now = new Date().getTime();
-    const timeDiff = (now - timestamp * 1000) / 1000;
-    if (timeDiff >= 86400) {
-      const days = Math.floor(timeDiff / 86400);
-      return days + (days === 1 ? " day" : " days") + " ago";
-    } else if (timeDiff >= 3600) {
-      const hours = Math.floor(timeDiff / 3600);
-      return hours + (hours === 1 ? " hour" : " hours") + " ago";
-    } else if (timeDiff >= 60) {
-      const minutes = Math.floor(timeDiff / 60);
-      return minutes + (minutes === 1 ? " minute" : " minutes") + " ago";
-    } else {
-      return "Just now";
-    }
-  }
+  const {getTimeElapsed} = useStateContext();
 
   return (
     <div>

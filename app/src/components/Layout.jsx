@@ -3,7 +3,7 @@ import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
 import { Outlet } from "react-router-dom";
 import ConnectMetamask from "./ConnectMetamask";
-import { useStateContext } from "../Context";
+import { useStateContext } from "../context";
 
 const Layout = () => {
   const { address } = useStateContext();

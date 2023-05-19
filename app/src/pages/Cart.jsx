@@ -1,5 +1,5 @@
 import React from "react";
-import { useStateContext } from "../Context/index.js";
+import { useStateContext } from "../context/index.js";
 import DisplayBuyings from "../components/DisplayBuyings.jsx";
 
 const Cart = () => {

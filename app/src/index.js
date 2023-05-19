@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import Hero from './Hero';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import {StateContextProvider} from "./Context"
+import {StateContextProvider} from "./context"
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
