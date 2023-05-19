@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useStateContext } from "../Context";
-import { logo, logout } from "../assets";
+import { mainlogo, logout } from "../assets";
 import { navlinks } from "../constants";
 
 const Icon = ({ styles, name, imgUrl, isActive, disabled, handleClick }) => (
@@ -37,7 +37,7 @@ const Sidebar = () => {
           setIsActive("dashboard");
         }}
       >
-        <Icon styles="w-[52px] h-[52px] bg-[#2c2f32]" imgUrl={logo} />
+        <img className="w-[50px] h-[50px] bg-[#2c2f32] rounded-[12px] " src={mainlogo} alt='w3'/>
       </Link>
 
       <div className="flex-1 flex flex-col justify-between items-center bg-[#1c1c24] rounded-[20px] w-[76px] py-4 mt-12">

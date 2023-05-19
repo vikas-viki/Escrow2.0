@@ -17,9 +17,11 @@ import creator from "./creator.png";
 import cart from "./cart.png";
 import listings from "./listings.png";
 import hiw from "./howitworks.png";
+import mainlogo from "./logo.png";
 
 export {
   tagType,
+  mainlogo,
   createCampaign,
   dashboard,
   logo,
