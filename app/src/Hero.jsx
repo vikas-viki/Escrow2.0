@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, HashRouter, Route, Routes } from "react-router-dom";
 import { Home, Profile } from "./pages";
 import Homepage from "./pages/Homepage";
 import Layout from "./components/Layout";
@@ -25,20 +25,20 @@ const Hero = () => {
   }, []);
 
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         <Route path="/" element={<Homepage />} />
         <Route path="home" element={<Layout />}>
           <Route path="/home/list" element={<ListNewProduct />} />
-          <Route path='/home' element={<Home />} />
-          <Route path='/home/profile' element={<Profile />} />
-          <Route path='/home/approve' element={<Approve />} />
-          <Route path='/home/cart' element={<Cart />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/home/profile" element={<Profile />} />
+          <Route path="/home/approve" element={<Approve />} />
+          <Route path="/home/cart" element={<Cart />} />
           <Route path="/home/:id" element={<ProductDetails />} />
-          <Route path='/home/How_it_works' element={<Howitworks />} />
+          <Route path="/home/How_it_works" element={<Howitworks />} />
         </Route>
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 };
 
