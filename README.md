@@ -2,6 +2,8 @@
 
 This is an Escrow Dapp built with [Hardhat](https://hardhat.org/).
 
+### Frontend: https://github.com/vikas-viki/Escrow-Frontend
+
 ## Project Layout
 
 There are three top-level folders:
